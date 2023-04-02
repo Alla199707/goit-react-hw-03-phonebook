@@ -16,6 +16,20 @@ export class App extends Component {
     filter: '',
   };
 
+  // ++ Положить в localStorage
+  componentDidUpdate(prevState) {
+    if (prevState.contacts !== this.state.contacts)
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+  }
+
+  // ++ Прочитать localStorage
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    if (contacts) {
+      this.setState({ contacts: JSON.parse(contacts) });
+    }
+  }
+
   addContact = contactData => {
     const newContact = { ...contactData, id: nanoid() };
     const newName = newContact.name.toLowerCase();
@@ -45,6 +59,7 @@ export class App extends Component {
       contacts: prevState.contacts.filter(el => el.id !== id),
     }));
   };
+
   render() {
     const { filter } = this.state;
     const filteredContacts = this.getFilterContacts();
